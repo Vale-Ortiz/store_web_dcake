@@ -1,9 +1,8 @@
 <?php
 require '../store_web_dcake/config/config.php';
-require '../store_web_dcake/config/conexion_producto.php';
+require 'config/conexion.php';
 require '../store_web_dcake/config/config2.php';
-$db = new Database();
-$con = $db->conectar();
+
 // Verificar y iniciar la sesión
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
@@ -154,7 +153,7 @@ echo '<script>
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Carrito Vacío</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -188,8 +187,8 @@ $con = null;
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-    <link rel="stylesheet" href="/css/Style.css"> 
-    <link rel="shortcut icon" href="/images2/icologo.ico">
+    <link rel="stylesheet" href="css/Style.css"> 
+    <link rel="shortcut icon" href="images2/icologo.ico">
 </head>
 <script>
 $(document).ready(function() {
@@ -199,7 +198,7 @@ $(document).ready(function() {
 <body class = "margin">
     <a href="https://api.whatsapp.com/send?phone=573008936926" 
      target="_blank">
-    <img class = "whatsappicon"src="/images2/whagifs.gif" alt="whatsapp"></a>
+    <img class = "whatsappicon"src="images2/whagifs.gif" alt="whatsapp"></a>
     <!-- cabecera de la pagina web, parte superior -->
     <h3 class= "contactar font_contactar">
         WhatsApp
@@ -209,8 +208,8 @@ $(document).ready(function() {
             <div class="row justify-content-between align-items-center">
              <!-- LOGO -->
                 <div class="col-md-2">
-                    <a href="../index.php">
-                        <img class="logo zoomlogo" src="/images2/dcakelogo.png" alt="dcake logo oficial">
+                    <a href="index.php">
+                        <img class="logo zoomlogo" src="images2/dcakelogo.png" alt="dcake logo oficial">
                     </a>
                 </div>
     <!-- ANCLAS -->
@@ -223,17 +222,17 @@ $(document).ready(function() {
                 </nav>      
                     <!-- Iconos -->
                 <nav>
-                        <a href="/checkout.php"><img  class = "sizei carrito" src="../images2/carrito.png" ></img></a>
-                        </a><span class="text-white ml-2"><a href="/checkout.php">Mi carrito</a><span id="num_cart" class="badge bg-secondary"><?php echo $num_cart; ?></span></a>
+                        <a href="checkout.php"><img  class = "sizei carrito" src="images2/carrito.png" ></img></a>
+                        </a><span class="text-white ml-2"><a href="#">Mi carrito</a><span id="num_cart" class="badge bg-secondary"><?php echo $num_cart; ?></span></a>
                     
-                        <a href="#"><img class="sizei estrella"src="../images2/estrella.png" alt=""></a>
+                        <a href="#"><img class="sizei estrella"src="images2/estrella.png" alt=""></a>
                         <?php if (!empty($nombre_usuario)) : ?>
-                            <a href="../dcakepasteleria/apartado_cliente.php"><span class="text-white ml-2"><?php echo $nombre_usuario; ?></span></a>
+                            <a href="dcakepasteleria/apartado_cliente.php"><span class="text-white ml-2"><?php echo $nombre_usuario; ?></span></a>
                         <?php else : ?>
-                            <span class="text-white ml-2"><a href="../dcakepasteleria/fidelizacion.php">Fidelizate</a></span>
+                            <span class="text-white ml-2"><a href="dcakepasteleria/fidelizacion.php">Fidelizate</a></span>
                         <?php endif; ?>   
-                        <a href="../dcakepasteleria/ingreso_vendedor.php"><img class="sizei vendedor"src="../images2/vendedor.png" alt=""></a>
-                        <span class="text-white ml-2"><a href="../dcakepasteleria/ingreso_vendedor.php">Portal vendedor</a></span> 
+                        <a href="dcakepasteleria/ingreso_vendedor.php"><img class="sizei vendedor"src="images2/vendedor.png" alt=""></a>
+                        <span class="text-white ml-2"><a href="dcakepasteleria/ingreso_vendedor.php">Portal vendedor</a></span> 
                 </nav>
             </div>
         </div>
@@ -312,7 +311,8 @@ $(document).ready(function() {
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
-                <button id = "btn-elimina"type="button" class="btn btn-danger" onclick="eliminar()">Eliminar</button>            </div>
+                <button id = "btn-elimina"type="button" class="btn btn-danger" onclick="eliminar()">Eliminar</button>           
+             </div>
             </div>
         </div>
         </div>

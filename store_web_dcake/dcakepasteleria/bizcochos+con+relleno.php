@@ -1,13 +1,11 @@
 <?php
 
 require '../config/config.php';
-require '../config/conexion_producto.php';
-$db = new Database();
-$con = $db->conectar();
+require '../config/conexion.php';
 
-$sql = $con-> prepare("SELECT Codigo,Nombre,Precio FROM store_web_dcake.producto WHERE Activo = 1 and id_categoria = 2");
+$sql = $conexion-> prepare("SELECT Codigo,Nombre,Precio FROM store_web_dcake.producto WHERE Activo = 1 and id_categoria = 2");
 $sql -> execute();
-$resultado = $sql -> fetchAll(PDO::FETCH_ASSOC);
+$resultado = $sql->get_result()->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,15 +14,14 @@ $resultado = $sql -> fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>D'cake pasteleria</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/Style.css"> 
-    <link rel="shortcut icon" href="/images2/icologo.ico">
+    <link rel="stylesheet" href="../css/Style.css"> 
+    <link rel="shortcut icon" href="../images2/icologo.ico">
 </head>
 
 <body class = "margin">
     <a href="https://api.whatsapp.com/send?phone=573008936926" 
      target="_blank">
     <img class = "whatsappicon"src="../images2/whagifs.gif" alt="whatsapp"></a>
-    <!-- cabecera de la pagina web, parte superior -->
     <h3 class= "contactar font_contactar">
         WhatsApp
     </h3>
@@ -34,7 +31,7 @@ $resultado = $sql -> fetchAll(PDO::FETCH_ASSOC);
             <!-- LOGO -->
             <div class="col-md-2">
                 <a href="../index.php">
-                    <img class="logo zoomlogo" src="/images2/dcakelogo.png" alt="dcake logo oficial">
+                    <img class="logo zoomlogo" src="../images2/dcakelogo.png" alt="dcake logo oficial">
                 </a>
             </div>
 
@@ -87,13 +84,13 @@ $resultado = $sql -> fetchAll(PDO::FETCH_ASSOC);
                 <nav class= "anclas">
                     <!-- Anclas -->
                     <a class="text-white mb-2 d-inline mr-3 small" href="#"><i class="fas fa-phone"></i> Teléfono: (604) 34 233 23</a>
-                    <a class="text-white mb-2 d-inline mr-3 small" href="/dcakepasteleria/servicioalcliente.php"><i class="fas fa-user"></i> Servicio al cliente</a>
-                    <a class="text-white mb-2 d-inline mr-3 small" href="/dcakepasteleria/help.php"><i class="fas fa-question-circle"></i> Ayuda</a>
+                    <a class="text-white mb-2 d-inline mr-3 small" href="../dcakepasteleria/servicioalcliente.html"><i class="fas fa-user"></i> Servicio al cliente</a>
+                    <a class="text-white mb-2 d-inline mr-3 small" href="../dcakepasteleria/help.php"><i class="fas fa-question-circle"></i> Ayuda</a>
                 </nav>      
                     <!-- Iconos -->
                 <nav>
                         <a href="/checkout.php"><img  class = "sizei carrito" src="../images2/carrito.png" ></img></a>
-                        </a><span class="text-white ml-2"><a href="/checkout.php">Mi carrito</a><span id="num_cart" class="badge bg-secondary"><?php echo $num_cart; ?></span></a>
+                        </a><span class="text-white ml-2"><a href="../checkout.php">Mi carrito</a><span id="num_cart" class="badge bg-secondary"><?php echo $num_cart; ?></span></a>
                     
                         <a href="#"><img class="sizei estrella"src="../images2/estrella.png" alt=""></a>
                         <span class="text-white ml-2"><a href="../dcakepasteleria/fidelizacion.php">Fidelizate</a></span>
@@ -115,10 +112,10 @@ $resultado = $sql -> fetchAll(PDO::FETCH_ASSOC);
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/dcakepasteleria/bizcochos.php">Bizcochos</a>
+                    <a class="nav-link" href="bizcochos.php">Bizcochos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../dcakepasteleria/bizcochos+con+relleno.php">Bizcochos con relleno</a>
+                    <a class="nav-link" href="bizcochos+con+relleno.php">Bizcochos con relleno</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Bizcochos con relleno y cobertura</a>
@@ -168,10 +165,8 @@ $resultado = $sql -> fetchAll(PDO::FETCH_ASSOC);
                  class="text_detalle">Detalles</a>
             </button>
             
-            <button class ="btn btn-outline-success btn-lg center" type="button" onclick = "addProducto
-            (<?php echo $row['Codigo']; ?>, '<?php echo hash_hmac('sha1', $row['Codigo'], 
-            KEY_TOKEN); ?>')">Añadir al carrito</button>
-        
+            <button class ="btn btn-outline-success btn-lg center" type="button" onclick = "addProducto (<?php echo $row['Codigo']; ?>, '<?php echo hash_hmac ('sha1', $row['Codigo'],KEY_TOKEN); ?>')"
+            >Añadir al carrito</button>        
             <?php } ?>
         </div>
     </section>

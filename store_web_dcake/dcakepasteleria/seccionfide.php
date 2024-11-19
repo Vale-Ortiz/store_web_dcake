@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión</title>
-    <!-- Agregar enlaces a Bootstrap CSS y JS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 
     <style>
@@ -63,7 +62,7 @@
             </div>
             <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
         </form>
-        <p class="mt-3 text-center">¿No tienes una cuenta? <a href="/dcakepasteleria/fidelizacion.php">Registrarse</a></p>
+        <p class="mt-3 text-center">¿No tienes una cuenta? <a href="fidelizacion.php">Registrarse</a></p>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>

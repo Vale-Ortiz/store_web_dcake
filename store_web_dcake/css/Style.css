@@ -1,6 +1,7 @@
 /* margen en todos los lados de la pagina */
 .margin{
       margin: 30px;
+      padding: 0%;
       background-color: #b6c8da;
 }
 
@@ -206,6 +207,7 @@ header{
 
 
 /* SECCION DE BIZCOCHOS */
+
 
 .BIZCOCHOS{
       background: #12304e;

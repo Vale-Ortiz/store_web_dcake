@@ -1,8 +1,7 @@
 <?php
-// Iniciar sesión
 session_start();
 
-// Conexión a la base de datos (utilizando PDO)
+// Configuración de la conexión a la base de datos
 $dsn = 'mysql:host=localhost;dbname=store_web_dcake';
 $username = 'root';
 $password = '';
@@ -18,7 +17,7 @@ $usuario = $_POST['usuario'];
 $contrasena = $_POST['password'];
 
 // Consulta para obtener la información del usuario, incluido el id_usuario
-$stmt = $db->prepare("SELECT id, usuario, contraseña FROM store_web_dcake.usuario WHERE usuario = :usuario");
+$stmt = $db->prepare("SELECT id_usuario, nombre_usuario, contraseña FROM store_web_dcake.usuario WHERE nombre_usuario = :usuario");
 $stmt->bindParam(':usuario', $usuario);
 $stmt->execute();
 
@@ -28,35 +27,28 @@ if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
     if (password_verify($contrasena, $hashed_password)) {
         // Las credenciales son correctas, iniciar sesión
-        $_SESSION['usuario'] = $row['usuario'];
-        
-        // Utiliza el nombre de columna correcto para el ID del usuario
-        $_SESSION['id_usuario'] = $row['id'];
-
-        // Imprime el valor de id_usuario para verificar
-        var_dump($_SESSION['id_usuario']);
+        $_SESSION['nombre_usuario'] = $row['nombre_usuario'];
+        $_SESSION['id_usuario'] = $row['id_usuario'];
 
         // Recuperar el carrito desde la base de datos y establecerlo en la sesión
-        $_SESSION['carrito']['productos'] = recuperarCarritoDesdeBaseDeDatos($row['usuario']);
+        $_SESSION['carrito']['productos'] = recuperarCarritoDesdeBaseDeDatos($row['id_usuario']);
 
         // Redirigir a la página principal
         header('Location: ../index.php');
+        exit();
     } else {
         // Contraseña incorrecta, redirigir al formulario de inicio de sesión
         header('Location: seccionfide.php');
+        exit();
     }
 } else {
     // Usuario no encontrado, redirigir al formulario de inicio de sesión
     header('Location: seccionfide.php');
+    exit();
 }
 
-
-
-// Cerrar conexión a la base de datos
-$db = null;
-
 // Función para recuperar el carrito desde la base de datos
-function recuperarCarritoDesdeBaseDeDatos($nombreUsuario) {
+function recuperarCarritoDesdeBaseDeDatos($idUsuario) {
     // Conexión a la base de datos (utilizando PDO)
     $dsn = 'mysql:host=localhost;dbname=store_web_dcake';
     $username = 'root';
@@ -70,7 +62,7 @@ function recuperarCarritoDesdeBaseDeDatos($nombreUsuario) {
 
     // Consulta para obtener los productos en el carrito del usuario
     $stmt = $db->prepare("SELECT codigo_producto, cantidad FROM store_web_dcake.carrito WHERE id_usuario = :usuario");
-    $stmt->bindParam(':usuario', $nombreUsuario);
+    $stmt->bindParam(':usuario', $idUsuario);
     $stmt->execute();
 
     // Array para almacenar los productos del carrito
@@ -86,4 +78,3 @@ function recuperarCarritoDesdeBaseDeDatos($nombreUsuario) {
 
     return $productosCarrito;
 }
-?>

@@ -1,16 +1,12 @@
 <?php
-require '../store_web_dcake/config/config.php';
-require '../store_web_dcake/config/conexion_producto.php';
-require '../store_web_dcake/config/config2.php'; //config de la sección de usuario
-require '../store_web_dcake/config/conexionbuscador.php';
-
+require '../config/config.php';
+require '../config/conexion.php';
+require '../config/config2.php'; 
 $nombre_usuario = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : '';
 
-$db = new Database();
-$con = $db->conectar();
-$sql = $con-> prepare("SELECT Codigo,Nombre,Precio FROM store_web_dcake.producto WHERE Activo = 1 AND id_categoria = 1");
+$sql = $conexion-> prepare("SELECT Codigo,Nombre,Precio FROM store_web_dcake.producto WHERE Activo = 1 AND id_categoria = 1");
 $sql -> execute();
-$resultado = $sql -> fetchAll(PDO::FETCH_ASSOC);
+$resultado = $sql->get_result()->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>  
@@ -20,24 +16,23 @@ $resultado = $sql -> fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>D'cake pasteleria</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/Style.css">
-    <link rel="shortcut icon" href="/images2/icologo.ico">
+    <link rel="stylesheet" href="../css/Style.css">
+    <link rel="shortcut icon" href="../images2/icologo.ico">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body class = "margin">
     <a href="https://api.whatsapp.com/send?phone=573008936926" 
      target="_blank">
-    <img class = "whatsappicon"src="/images2/whagifs.gif" alt="whatsapp"></a>
-    <h3 class= "contactar font_contactar">WhatsApp</h3>
+    <img class = "whatsappicon"src="../images2/whagifs.gif" alt="whatsapp"></a>
+    <h5 class= "contactar font_contactar">WhatsApp</h5>
 
 <header class="py-2 text-white">
     <div class="container">
         <div class="row justify-content-between align-items-center">
-            <!-- LOGO -->
             <div class="col-md-2">
                 <a href="../index.php">
-                    <img class="logo zoomlogo" src="/images2/dcakelogo.png" alt="dcake logo oficial">
+                    <img class="logo zoomlogo" src="../images2/dcakelogo.png" alt="dcake logo oficial">
                 </a>
             </div>
 
@@ -175,10 +170,8 @@ $resultado = $sql -> fetchAll(PDO::FETCH_ASSOC);
                  class="text_detalle">Detalles</a>
             </button>
             
-            <button class ="btn btn-outline-success btn-lg center" type="button" onclick = "addProducto
-            (<?php echo $row['Codigo']; ?>, '<?php echo hash_hmac('sha1', $row['Codigo'], 
-            KEY_TOKEN); ?>')">Añadir al carrito</button>
-            
+            <button class ="btn btn-outline-success btn-lg center" type="button" onclick = "addProducto (<?php echo $row['Codigo']; ?>, '<?php echo hash_hmac('sha1', $row['Codigo'],KEY_TOKEN); ?>')"
+            >Añadir al carrito</button>
             <?php } ?>
         </div>
     </section>
@@ -186,32 +179,32 @@ $resultado = $sql -> fetchAll(PDO::FETCH_ASSOC);
 
     <!-- AÑADIR PRODUCTOS -->
     <script>
-        function addProducto(id, token){
-            let url = '../clases/carrito.php'
-            let formData = new FormData()
-            formData.append('Codigo', id)
-            formData.append('token', token)
+    function addProducto(id, token) {
+        let url = '../clases/carrito.php';
+        let formData = new FormData();
+        formData.append('Codigo', id);
+        formData.append('token', token);
 
-            fetch(url,{
-                method: 'POST',
-                body: formData,
-                mode: 'cors'
-             }).then(response => response.json())
-             .then(data => {
-                if(data.ok){
-                    let elemento = document.getElementById("num_cart")
-                    elemento.innerHTML = data.numero
-                }else {
-      console.error("Error en <?php echo hash_hmac('sha1', $row['Codigo'], KEY_TOKEN); ?>')">Añadir al carrito</button>la respuesta:", data.error);
-    }
-  })
-  .catch(error => {
-    console.error("Error en la solicitud:", error);
-  });
+        fetch(url, {
+            method: 'POST',
+            body: formData,
+            mode: 'cors'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.ok) {
+                let elemento = document.getElementById("num_cart");
+                elemento.innerHTML = data.numero;
+            } else {
+                console.error("Error en la respuesta:", data.error);
             }
-    </script>
+        })
+        .catch(error => {
+            console.error("Error en la solicitud:", error);
+        });
+    }
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
- 
-</body>
+    </body>
 </html>

@@ -92,7 +92,7 @@
             <button type="submit" class="btn btn-primary">Registrarme</button>
         </form>
         <!-- Botón de "Ya tengo una cuenta" y Opciones de Registro -->
-        <p class="mt-3">¿Ya tienes una cuenta? <a href="/dcakepasteleria/seccionfide.php">Iniciar sesión</a></p>
+        <p class="mt-3">¿Ya tienes una cuenta? <a href="seccionfide.php">Iniciar sesión</a></p>
         <p class="mt-3">O regístrate con:</p>
         <a href="#" class="btn btn-danger ">Gmail</a>
         <a href="#" class="btn btn-primary "> Hotmail</a>

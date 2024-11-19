@@ -1,18 +1,19 @@
 <?php
-require '../config/conexion_usuario.php';
+require_once '../config/conexion.php';
 
-// Consulta para obtener todos los comentarios
-$sql = "SELECT nombre_usuario, id_usuario, id_comentario, texto, correo_electronico, fecha_registro FROM comentario";
-$result = $conn->query($sql);
+// Consulta para obtener todos los usuarios
+$sql = "SELECT id_usuario, correo_electronico, nombre_usuario, contraseña FROM usuario";
+
+$result = $conexion->query("SELECT * FROM usuario");
 
 // Comprobar si hay resultados
-if ($result->rowCount() > 0) {
-    $comentario = $result->fetchAll(PDO::FETCH_ASSOC);
+if ($result->num_rows > 0) {
+    $usuarios = $result->fetch_all(MYSQLI_ASSOC);
 } else {
-    $comentario = array(); // Si no hay comentarios, crea un array vacío
+    $usuarios = array(); // Si no hay usuarios, crea un array vacío
 }
 
-$conn = null; // Cerrar la conexión
+$conexion->close(); // Cerrar la conexión
 ?>
 
 <!DOCTYPE html>
@@ -20,7 +21,7 @@ $conn = null; // Cerrar la conexión
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comentarios</title>
+    <title>Usuarios</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -97,32 +98,30 @@ $conn = null; // Cerrar la conexión
 </head>
 <body>
     <div style="margin: 20px;">
-        <h1>Comentarios</h1>
+        <h1>Lista de Usuarios</h1>
         <input type="text" id="buscador" placeholder="Buscar por ID, Usuario o Correo Electrónico">
         <button onclick="buscar()">Buscar</button>
 
-        <table id="tablaComentario">
+        <table id="tablaUsuarios">
             <thead>
                 <tr>
                     <th>#</th>
                     <th>Usuario</th>
-                    <th>Id</th>
-                    <th>Comentario</th>
-                    <th>Correo electronico</th>
+                    <th>Correo Electrónico</th>
+                    <th>Contraseña</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
                 $contador = 1;
-                foreach ($comentario as $comentario) {
-                    echo "<tr id='row_{$comentario['id_comentario']}'>";
+                foreach ($usuarios as $usuarioItem) {
+                    echo "<tr id='row_{$usuarioItem['id_usuario']}'>";
                     echo "<td>$contador</td>";
-                    echo "<td>{$comentario['nombre_usuario']}</td>";
-                    echo "<td>{$comentario['id_usuario']}</td>";
-                    echo "<td>{$comentario['texto']}</td>";
-                    echo "<td>{$comentario['correo_electronico']}</td>";
-                    echo "<td><button class='eliminar-btn' onclick='confirmarEliminar({$comentario['id_comentario']})'>Eliminar</button></td>";
+                    echo "<td>{$usuarioItem['nombre_usuario']}</td>";
+                    echo "<td>{$usuarioItem['correo_electronico']}</td>";
+                    echo "<td>{$usuarioItem['contraseña']}</td>";
+                    echo "<td><button class='eliminar-btn' onclick='confirmarEliminar({$usuarioItem['id_usuario']})'>Eliminar</button></td>";
                     echo "</tr>";
                     $contador++;
                 }
@@ -134,20 +133,19 @@ $conn = null; // Cerrar la conexión
     <!-- Modal de confirmación para eliminar usuario -->
     <div id="modalEliminar" class="modal">
         <div class="modal-content">
-            <p>¿Estás seguro de eliminar  este comentario? Tu acción no podrá ser revertida.</p>
-            <input type="hidden" id="idComentarioEliminar" value="">
-            <button class="modal-btn" onclick="eliminarComentario()">Sí</button>
+            <p>¿Estás seguro de eliminar a este usuario? Tu acción no podrá ser revertida.</p>
+            <input type="hidden" id="idUsuarioEliminar" value="">
+            <button class="modal-btn" onclick="eliminarUsuario()">Sí</button>
             <button class="modal-btn cancelar" onclick="cerrarModal()">No</button>
         </div>
     </div>
-
 
     <script>
         function buscar() {
             var input, filter, table, tr, td, i, txtValue;
             input = document.getElementById("buscador");
             filter = input.value.toUpperCase();
-            table = document.getElementById("tablaComentario");
+            table = document.getElementById("tablaUsuarios");
             tr = table.getElementsByTagName("tr");
 
             for (i = 0; i < tr.length; i++) {
@@ -163,27 +161,27 @@ $conn = null; // Cerrar la conexión
             }
         }
 
-        function confirmarEliminar(idComentario) {
+        function confirmarEliminar(idUsuario) {
             var modal = document.getElementById("modalEliminar");
             modal.style.display = "block";
 
             // Guardar el ID del usuario a eliminar en un campo oculto del modal
-            document.getElementById("idComentarioEliminar").value = idComentario;
+            document.getElementById("idUsuarioEliminar").value = idUsuario;
         }
 
-        function eliminarComentario() {
-            // Obtener el ID del comentario a eliminar desde el campo oculto
-            var idComentario = document.getElementById("idComentarioEliminar").value;
+        function eliminarUsuario() {
+            // Obtener el ID del usuario a eliminar desde el campo oculto
+            var idUsuario = document.getElementById("idUsuarioEliminar").value;
 
             // Realizar una solicitud AJAX al servidor para eliminar el usuario
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "../config/eliminar_comentario.php", true);
+            xhr.open("POST", "../config/eliminar_usuario.php", true);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     // Actualizar la tabla después de eliminar el usuario
-                    var tableRow = document.getElementById("row_" + idComentario);
+                    var tableRow = document.getElementById("row_" + idUsuario);
                     if (tableRow) {
                         tableRow.remove();
                     }
@@ -193,7 +191,7 @@ $conn = null; // Cerrar la conexión
                 }
             };
 
-            xhr.send("idComentario=" + idComentario);
+            xhr.send("idUsuario=" + idUsuario);
         }
 
         function cerrarModal() {
@@ -201,6 +199,5 @@ $conn = null; // Cerrar la conexión
             modal.style.display = "none";
         }
     </script>
-
-    </body>
+</body>
 </html>

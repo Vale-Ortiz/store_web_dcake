@@ -1,9 +1,9 @@
 <?php
-require '../store_web_dcake/config/config.php'; //config del checkout
-require '../store_web_dcake/config/conexion_producto.php';
-require '../store_web_dcake/config/config2.php'; //config de la sección de usuario
+require '../store_web_dcake/config/config.php'; 
+require 'config/conexion.php';
+require '../store_web_dcake/config/config2.php'; 
 
-$nombre_usuario = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : '';
+$nombre_usuario = isset($_SESSION['usuario']) ? htmlspecialchars($_SESSION['usuario'], ENT_QUOTES, 'UTF-8') : '';
 ?>
 
 <!DOCTYPE html>
@@ -14,7 +14,7 @@ $nombre_usuario = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : '';
     <title>D'cake pasteleria</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="../store_web_dcake/css/Style.css"> 
-    <link rel="shortcut icon" href="/images2/icologo.ico">
+    <link rel="shortcut icon" href="../store_web_dcake/images2/icologo.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 </head>
@@ -49,22 +49,22 @@ $nombre_usuario = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : '';
                 <nav class= "anclas">
                     <!-- Anclas -->
                     <a class="text-white mb-2 d-inline mr-3 small" href="#"><i class="fas fa-phone"></i> Teléfono: (604) 34 233 23</a>
-                    <a class="text-white mb-2 d-inline mr-3 small" href="../store_web_dcake/dcakepasteleria/servicioalcliente.php"><i class="fas fa-user"></i> Servicio al cliente</a>
+                    <a class="text-white mb-2 d-inline mr-3 small" href="../store_web_dcake/dcakepasteleria/servicioalcliente.html"><i class="fas fa-user"></i> Servicio al cliente</a>
                     <a class="text-white mb-2 d-inline mr-3 small" href="../store_web_dcake/dcakepasteleria/help.php"><i class="fas fa-question-circle"></i> Ayuda</a>
                 </nav>      
                     <!-- Iconos -->
                 <nav>
-                        <a href="../store_web_dcake/checkout.php"><img  class = "sizei carrito" src="../store_web_dcake/images2/carrito.png" ></img></a>
-                        </a><span class="text-white ml-2"><a href="../store_web_dcake/checkout.php">Mi carrito</a><span id="num_cart" class="badge bg-secondary"><?php echo $num_cart; ?></span></a>
+                        <a href="checkout.php"><img  class = "sizei carrito" src="images2/carrito.png" ></img></a>
+                        <span class="text-white ml-2"><a href="checkout.php">Mi carrito</a><span id="num_cart" class="badge bg-secondary"><?php echo $num_cart; ?></span></a>
                     
-                        <a href="#"><img class="sizei estrella"src="../store_web_dcake/images2/estrella.png" alt=""></a>
+                        <a href="#"><img class="sizei estrella"src="images2/estrella.png" alt=""></a>
                         <?php if (!empty($nombre_usuario)) : ?>
-                            <a href="../store_web_dcake/dcakepasteleria/apartado_cliente.php"><span class="text-white ml-2"><?php echo $nombre_usuario; ?></span></a>
+                            <a href="dcakepasteleria/apartado_cliente.php"><span class="text-white ml-2"><?php echo $nombre_usuario; ?></span></a>
                         <?php else : ?>
-                            <span class="text-white ml-2"><a href="../store_web_dcake/dcakepasteleria/fidelizacion.php">Fidelizate</a></span>
+                            <span class="text-white ml-2"><a href="dcakepasteleria/fidelizacion.php">Fidelizate</a></span>
                         <?php endif; ?>                  
-                        <a href="../store_web_dcake/dcakepasteleria/ingreso_vendedor.php"><img class="sizei vendedor"src="../store_web_dcake/images2/vendedor.png" alt=""></a>
-                        <span class="text-white ml-2"><a href="../dcakepasteleria/ingreso_vendedor.php">Portal vendedor</a></span> 
+                        <a href="dcakepasteleria/ingreso_vendedor.php"><img class="sizei vendedor"src="images2/vendedor.png" alt=""></a>
+                        <span class="text-white ml-2"><a href="dcakepasteleria/ingreso_vendedor.php">Portal vendedor</a></span> 
                 </nav>
             </div>
         </div>
@@ -98,11 +98,11 @@ $nombre_usuario = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : '';
                     <a class="nav-link" href="#">Brownies</a>
                 </li>
             </ul>
-        </div>
+        </div>        
             <!-- Sección de ingreso a fidelización o nombre de usuario -->
-        <?php if (!empty($nombre_usuario)) : ?>
+        <?php if (!empty($_SESSION['nombre_suario'])) : ?>
             <!-- Mostrar el nombre del usuario -->
-            <span class="text-success ml-2 font-weight-bold">¡Hola, <?php echo $nombre_usuario; ?>!</span>
+            <span class="text-success ml-2 font-weight-bold">¡Hola, <?php echo htmlspecialchars($_SESSION['nombre_usuario']);?>!</span>
         <?php else : ?>
             <!-- Mostrar el botón de ingreso a fidelización -->
             <a class="btn btn-primary mt-2" href="../store_web_dcake/dcakepasteleria/seccionfide.php">

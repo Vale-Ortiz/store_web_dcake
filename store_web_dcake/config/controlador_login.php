@@ -25,7 +25,7 @@ $resultado = mysqli_query($conexion,$consulta);
 $filas = mysqli_num_rows($resultado);
 
 if($filas > 0) {
-    header("location: ../store_web_dcake/dcakepasteleria/iniciovendedor.php");
+    header("location: ../dcakepasteleria/iniciovendedor.php");
 } else { ?>
 
 <div class="container center-message">

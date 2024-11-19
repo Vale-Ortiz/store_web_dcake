@@ -11,6 +11,6 @@ if (isset($_SESSION['usuario'])) {
 }
 
 // Redirigir al usuario a la página de inicio de sesión
-header('Location: ../store_web_dcake/index.php');
+header('Location: ../index.php');
 exit;
 ?>

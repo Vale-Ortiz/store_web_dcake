@@ -1,58 +1,19 @@
 <?php
-require '../config/conexion_usuario.php';
-// Debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+require_once '../config/conexion.php';
 
-if (isset($_POST['id_pedido']) && !empty($_POST['id_pedido'])) {
-    $idPedido = $_POST['id_pedido'];
 
-    // Consulta para obtener los detalles del pedido
-    $sqlDetalles = $conn->prepare("SELECT * FROM store_web_dcake.detalles_pedido WHERE id_pedido = ?");
-    $sqlDetalles->bindParam(1, $idPedido, PDO::PARAM_INT);
-    $sqlDetalles->execute();
-    $detallesPedido = $sqlDetalles->fetchAll(PDO::FETCH_ASSOC);
+$sql = "SELECT id_pedido, fecha, id_usuario, total, nombre_usuario FROM pedido";
 
-    $sqlDetalles = null;
-
-    if (!empty($detallesPedido)) {
-        echo json_encode(['ok' => true, 'detalles' => $detallesPedido]);
-    } else {
-        echo json_encode(['ok' => false, 'error' => 'Detalles de pedido no encontrados']);
-    }
-
-    // Salir después de enviar la respuesta JSON
-    exit;
-} else {
-    // Si no se proporciona el ID del pedido, responde con error
-    echo json_encode(['ok' => false, 'error' => 'ID de pedido no proporcionado']);
-    // Salir después de enviar la respuesta JSON
-   
-}
-
-// Consulta para obtener todos los pedidos
-$sql = "SELECT fecha, id_usuario, nombre_usuario, id_pedido, total FROM store_web_dcake.pedido";
-$result = $conn->query($sql);
+$result = $conexion->query("SELECT * FROM pedido");
 
 // Comprobar si hay resultados
-if ($result->rowCount() > 0) {
-    $pedido = $result->fetchAll(PDO::FETCH_ASSOC);
+if ($result->num_rows > 0) {
+    $pedido = $result->fetch_all(MYSQLI_ASSOC);
 } else {
     $pedido = array(); // Si no hay pedidos, crea un array vacío
 }
 
-// Procesamiento para guardar en la tabla pedido_confirmado
-if (isset($_POST['confirmarNombre']) && isset($_POST['confirmarTelefono']) && isset($_POST['confirmarDireccion']) && isset($_POST['medioPago'])) {
-    $confirmarNombre = $_POST['confirmarNombre'];
-    $confirmarTelefono = $_POST['confirmarTelefono'];
-    $confirmarDireccion = $_POST['confirmarDireccion'];
-    $medioPago = $_POST['medioPago'];
-
-    // Insertar en la tabla pedido_confirmado
-    $sqlInsertPedidoConfirmado = $conn->prepare("INSERT INTO pedido_confirmado (nombre, telefono, direccion, medio_pago) VALUES (?, ?, ?, ?)");
-    $sqlInsertPedidoConfirmado->execute([$confirmarNombre, $confirmarTelefono, $confirmarDireccion, $medioPago]);
-}
-// $conn = null; // Cerrar la conexión
+$conexion->close();
 ?>
 
 <!DOCTYPE html>
@@ -160,17 +121,17 @@ if (isset($_POST['confirmarNombre']) && isset($_POST['confirmarTelefono']) && is
             <tbody>
                 <?php
                 $contador = 1;
-                foreach ($pedido as $pedido) {
-                    echo "<tr id='row_{$pedido['id_pedido']}'>";
+                foreach ($pedido as $pedidoItem) {
+                    echo "<tr id='row_{$pedidoItem['id_pedido']}'>";
                     echo "<td>$contador</td>";
-                    echo "<td>{$pedido['fecha']}</td>";
-                    echo "<td>{$pedido['id_usuario']}</td>";
-                    echo "<td>{$pedido['nombre_usuario']}</td>";
-                    echo "<td>{$pedido['id_pedido']}</td>";
-                    echo "<td>{$pedido['total']}</td>";
+                    echo "<td>{$pedidoItem['fecha']}</td>";
+                    echo "<td>{$pedidoItem['id_usuario']}</td>";
+                    echo "<td>{$pedidoItem['nombre_usuario']}</td>";
+                    echo "<td>{$pedidoItem['id_pedido']}</td>";
+                    echo "<td>{$pedidoItem['total']}</td>";
                     echo "<td>
-                    <button class='eliminar-btn' onclick='confirmarEliminar({$pedido['id_pedido']})'>Eliminar</button>
-                    <button class='detalles-btn' onclick='DetallesConfirmarPedido({$pedido['id_pedido']})'>Ver detalles y confirmar</button>
+                    <button class='eliminar-btn' onclick='confirmarEliminar({$pedidoItem['id_pedido']})'>Eliminar</button>
+                    <button class='detalles-btn' onclick='DetallesConfirmarPedido({$pedidoItem['id_pedido']})'>Ver detalles y confirmar</button>
                 </td>";
                     echo "</tr>";
                     $contador++;
